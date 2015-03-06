@@ -1,6 +1,6 @@
 #### Frontend Rescue
 
-frontend_rescue provides a backend endpoint for your frontend JavaScript application to send errors to when they’re caught.
+frontend_rescue provides a backend endpoint as a rack middleware for your frontend JavaScript application to send errors to when they’re caught.
 
 This makes it easier to integrate your frontend stack traces to your backend analytics.
 
@@ -23,6 +23,8 @@ Or install it yourself as:
 ## Backend Usage
 
 #### Rails
+
+Use the frontend_rescue middleware :
 
     Rails.application.configure do
       config.middleware.use ClientErrorHandler::Middleware, paths: ['/frontend-error']
