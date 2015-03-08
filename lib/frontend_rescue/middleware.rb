@@ -9,7 +9,7 @@ module FrontendRescue
     end
 
     def call(env)
-      if frontend_error?(env)
+      if frontend_error_request?(env)
         handle_error Rack::Request.new(env)
       else
         @app.call(env)
@@ -47,9 +47,10 @@ module FrontendRescue
         }
       end
 
-      def frontend_error?(env)
+      def frontend_error_request?(env)
         env['REQUEST_METHOD'] == 'POST' &&
-        @opts[:paths].include?(env['PATH_INFO'])
+        @opts[:paths].include?(env['PATH_INFO']) &&
+        (@opts[:exclude_user_agent].nil? || env['HTTP_USER_AGENT'] !~ @opts[:exclude_user_agent])
       end
 
       def silent?

@@ -47,6 +47,10 @@ By default, frontend_rescue will output the frontend error to the logs.
 
 You can pass in ```silent: true```, frontend errors are not logged. You will likely use this option when passing a block.
 
+**exclude_user_agent**
+
+You might want to ignore certain user agents. You can exlude user agents with a RegExp ```exclude_user_agent: /Googlebot/```.
+
 **&block**
 
 You can pass in a block to frontend_rescue and it will be called and passed a FrontendRescue::Error and a Rack::Request :
@@ -90,7 +94,3 @@ Ember example :
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
-
-## TODO
-
-1. Tests...
