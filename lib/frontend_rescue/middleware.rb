@@ -9,7 +9,7 @@ module FrontendRescue
     end
 
     def call(env)
-      if env['REQUEST_METHOD'] == 'POST' && @opts[:paths].include?(env['PATH_INFO'])
+      if frontend_error?(env)
         handle_error Rack::Request.new(env)
       else
         @app.call(env)
@@ -23,21 +23,20 @@ module FrontendRescue
                                           request.params['message'],
                                           request.params['stack']
 
-        request.env['rack.errors'].puts "Processing #{error.class}" unless @opts[:silent]
+        request.env['rack.errors'].puts "Processing #{error.class}" unless silent?
 
         if @block
           @block.call(error, request)
         end
 
-        unless @opts[:silent]
+        unless silent?
           request.env['rack.errors'].puts error.message
           request.env['rack.errors'].puts error.backtrace.join("\n")
           request.env['rack.errors'].flush
         end
 
-        code = @opts[:status_code]
-        request.env['rack.errors'].puts "Completed #{code} OK" unless @opts[:silent]
-        [code, {}, []]
+        request.env['rack.errors'].puts "Completed #{status_code} OK" unless silent?
+        [status_code, {}, []]
       end
 
       def default_options
@@ -46,6 +45,19 @@ module FrontendRescue
           silent: false,
           status_code: 500
         }
+      end
+
+      def frontend_error?(env)
+        env['REQUEST_METHOD'] == 'POST' &&
+        @opts[:paths].include?(env['PATH_INFO'])
+      end
+
+      def silent?
+        @opts[:silent]
+      end
+
+      def status_code
+        @opts[:status_code]
       end
 
   end
