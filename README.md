@@ -1,5 +1,7 @@
 #### Frontend Rescue
 
+[![Build Status](https://travis-ci.org/jdurand/frontend_rescue.svg)](https://travis-ci.org/jdurand/frontend_rescue)
+
 frontend_rescue provides a backend endpoint as a rack middleware for your frontend JavaScript application to send errors to when they’re caught.
 
 This makes it easier to integrate your frontend stack traces to your backend analytics.
@@ -27,7 +29,7 @@ Or install it yourself as:
 Use the frontend_rescue middleware :
 
     Rails.application.configure do
-      config.middleware.use ClientErrorHandler::Middleware, paths: ['/frontend-error']
+      config.middleware.use FrontendRescue::Middleware, paths: ['/frontend-error']
     end
 
 #### Options
@@ -38,7 +40,7 @@ By default, frontend_rescue will respond with a ```500 (Server Error)```.
 
 You can override this value with any HTTP status code you like :
 
-    config.middleware.use ClientErrorHandler::Middleware, paths: ['/frontend-error'],
+    config.middleware.use FrontendRescue::Middleware, paths: ['/frontend-error'],
                                                           status_code: 200
 
 **silent**
@@ -55,7 +57,7 @@ You might want to ignore certain user agents. You can exlude user agents with a 
 
 You can pass in a block to frontend_rescue and it will be called and passed a FrontendRescue::Error and a Rack::Request :
 
-    config.middleware.use ClientErrorHandler::Middleware, paths: ['/frontend-error'],
+    config.middleware.use FrontendRescue::Middleware, paths: ['/frontend-error'],
                                                           status_code: 200,
                                                           silent: true do |error, request|
       NewRelic::Agent.notice_error(error)
@@ -64,7 +66,7 @@ You can pass in a block to frontend_rescue and it will be called and passed a Fr
 
 #### Sinatra
 
-    use ClientErrorHandler::Middleware, paths: ['/frontend-error']
+    use FrontendRescue::Middleware, paths: ['/frontend-error']
 
 With the options described above.
 
