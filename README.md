@@ -51,7 +51,7 @@ You can pass in ```silent: true```, frontend errors are not logged. You will lik
 
 **exclude_user_agent**
 
-You might want to ignore certain user agents. You can exlude user agents with a RegExp ```exclude_user_agent: /Googlebot/```.
+You might want to ignore certain user agents. You can exlude user agents with a Regexp: ```exclude_user_agent: /Googlebot/```.
 
 **&block**
 
