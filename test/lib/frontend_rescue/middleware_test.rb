@@ -1,13 +1,15 @@
 require_relative '../../test_helper'
 
 describe FrontendRescue::Middleware do
-  let(:app) { MockRackApplication.new }
+  let(:app) { MockRackApplication.new({'CONTENT_TYPE' => content_type, 'HTTP_USER_AGENT' => user_agent}) }
   let(:middleware) { FrontendRescue::Middleware.new(app) }
   let(:request) { Rack::MockRequest.new(middleware) }
-  let(:response) { request.post(request_path, input: post_data, 'CONTENT_TYPE' => 'text/plain') }
+  let(:response) { request.post(request_path, input: post_data) }
 
   let(:request_path) { "/some/path" }
   let(:post_data) { "String or IO post data" }
+  let(:content_type) { "text/plain" }
+  let(:user_agent) { "Mozilla/5.0 (iPad; CPU OS 8_1_3 like Mac OS X)..." }
 
   describe "when called with a POST request" do
     describe "with any data" do
@@ -65,6 +67,15 @@ describe FrontendRescue::Middleware do
       let(:middleware) { FrontendRescue::Middleware.new(app) {|e,r| r.env['rack.errors'].puts 'The answer is 42' }}
       it "should be executed" do
         response.errors.must_match /The\sanswer\sis\s42/
+      end
+    end
+
+    describe "when exclude_user_agent is passed" do
+      let(:middleware) { FrontendRescue::Middleware.new(app, exclude_user_agent: /Googlebot/) }
+      let(:user_agent) { 'Googlebot/2.1; +http://www.google.com/bot.html...' }
+      it "should ignore matching user agent" do
+        skip("I don't know how to test this")
+        response.status.must_equal 404
       end
     end
   end
