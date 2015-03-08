@@ -29,7 +29,7 @@ Or install it yourself as:
 Use the frontend_rescue middleware :
 
     Rails.application.configure do
-      config.middleware.use FrontendRescue::Middleware, paths: ['/frontend-error']
+      config.middleware.use FrontendRescue::Middleware
     end
 
 #### Options
@@ -40,14 +40,17 @@ By default, frontend_rescue will respond with a ```500 (Server Error)```.
 
 You can override this value with any HTTP status code you like :
 
-    config.middleware.use FrontendRescue::Middleware, paths: ['/frontend-error'],
-                                                          status_code: 200
+    config.middleware.use FrontendRescue::Middleware, status_code: 200
 
 **silent**
 
 By default, frontend_rescue will output the frontend error to the logs.
 
 You can pass in ```silent: true```, frontend errors are not logged. You will likely use this option when passing a block.
+
+**paths**
+
+By default, frontend_rescue will take post requests from ```/frontend-error```. You can override this behavior by passing in an array of ``` paths: ['/client/error'] ```
 
 **exclude_user_agent**
 
@@ -57,16 +60,14 @@ You might want to ignore certain user agents. You can exlude user agents with a 
 
 You can pass in a block to frontend_rescue and it will be called and passed a FrontendRescue::Error and a Rack::Request :
 
-    config.middleware.use FrontendRescue::Middleware, paths: ['/frontend-error'],
-                                                          status_code: 200,
-                                                          silent: true do |error, request|
+    config.middleware.use FrontendRescue::Middleware, status_code: 200, silent: true do |error, request|
       NewRelic::Agent.notice_error(error)
     end
 
 
 #### Sinatra
 
-    use FrontendRescue::Middleware, paths: ['/frontend-error']
+    use FrontendRescue::Middleware
 
 With the options described above.
 
