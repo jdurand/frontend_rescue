@@ -1,7 +1,7 @@
 module FrontendRescue
   class Error < StandardError
     def initialize(name, user_agent, message, trace)
-      @trace = trace.split("\n") if trace.is_a? String
+      @trace = trace.split("\n") rescue []
       @user_agent = user_agent
       super "Uncaught #{name} Error: #{message}"
     end

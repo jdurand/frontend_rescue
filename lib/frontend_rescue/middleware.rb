@@ -1,8 +1,10 @@
+require 'rack'
+
 module FrontendRescue
   class Middleware
-    def initialize(app, opts, &block)
+    def initialize(app, opts={}, &block)
       @app = app
-      @opts = opts
+      @opts = default_options.merge(opts)
       @block = block
     end
 
@@ -33,9 +35,17 @@ module FrontendRescue
           request.env['rack.errors'].flush
         end
 
-        code = @opts[:status_code] || 500
-        request.env['rack.errors'].puts "Completed #{code} OK"
+        code = @opts[:status_code]
+        request.env['rack.errors'].puts "Completed #{code} OK" unless @opts[:silent]
         [code, {}, []]
+      end
+
+      def default_options
+        {
+          paths: ['/frontend-error'],
+          silent: false,
+          status_code: 500
+        }
       end
 
   end
