@@ -84,7 +84,8 @@ Ember example :
           name: 'My App',
           user_agent: navigator.userAgent,
           message: error.message,
-          stack: error.stack
+          stack: error.stack,
+          custom_params: {version: '1.0.0'}
         }
       });
     };

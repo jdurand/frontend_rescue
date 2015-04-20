@@ -21,7 +21,8 @@ module FrontendRescue
         error = FrontendRescue::Error.new request.params['name'],
                                           request.params['user_agent'],
                                           request.params['message'],
-                                          request.params['stack']
+                                          request.params['stack'],
+                                          request.params['custom_params']
 
         request.env['rack.errors'].puts "Processing #{error.class}" unless silent?
 
